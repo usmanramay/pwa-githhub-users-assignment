@@ -1,5 +1,8 @@
-var cacheName = 'mychace45';
-var dataCacheName = 'mychace56'; 
+var cacheName = 'mychace109';
+var dataCacheName = 'mychace108'; 
+
+var server = "https://api.github.com/users/octocat/followers";
+//var server = "http://localhost:3000/users";
 var filesToCache = [
   
   '/index.js',
@@ -27,7 +30,7 @@ self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (keyList) {
       return Promise.all(keyList.map(function (key) {
-        if (key !== cacheName) {
+        if (key !== cacheName && key!=='dynamic-03') {
           console.log('[ServiceWorker] Removing old cache', key);
           return caches.delete(key);
         }
@@ -41,10 +44,12 @@ self.addEventListener('activate', function (e) {
 self.addEventListener('fetch', function (e) {
   console.log('[ServiceWorker] Fetch', e.request.url);
   
-  if(e.request.url.startsWith("http://localhost:3000")){
-   caches.open(dataCacheName).then(function(cache){
+  if(e.request.url.startsWith(server)){
+  console.log("opens"); 
+  caches.open(servers).then(function(cache){
     return fetch(e.request).then(function(response){
       cache.put(e.request,response.clone());
+    console.log("cache returend");
       return response;
     })
 
@@ -54,7 +59,8 @@ self.addEventListener('fetch', function (e) {
   }
   else{
   
-  
+    console.log("not openeing");
+
   
 
   e.respondWith(
